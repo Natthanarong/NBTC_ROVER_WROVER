@@ -174,6 +174,8 @@ void readCorrection(void *parameter){
       memcpy(corrSend,corrGet,sizeof(corrGet));
       Serial.println("Copy Correction Done!!");
     }
+    Serial.print("Free Heap in readCorrection = ");
+    Serial.println(ESP.getFreeHeap());
     vTaskDelay(200/portTICK_PERIOD_MS);
   }
 }
@@ -185,6 +187,8 @@ void sendCorrection(void *parameter){
       Serial.println("Send Correction Done!!");
       memset(corrSend, 0, sizeof(corrSend));
     }
+    Serial.print("Free Heap in sendCorrection = ");
+    Serial.println(ESP.getFreeHeap());
     vTaskDelay(200/portTICK_PERIOD_MS);
   }
 }
@@ -217,6 +221,8 @@ void readNMEA(void *parameter){
     // Serial.print("NMEA Solution = ");
     sendNMEA(nmea);
     // Serial.println(nmea);
+    Serial.print("Free Heap in readNMEA = ");
+    Serial.println(ESP.getFreeHeap());
     vTaskDelay(200/portTICK_PERIOD_MS);
   }
 }
@@ -240,8 +246,18 @@ void setup() {
   WiFi.disconnect();
   delay(100);
   Serial.println("WIFI setup done");
-  listWifi();
-  wifiConnect();
+  // listWifi();
+  // wifiConnect();
+  WiFi.begin(SSID_PHON, PASS_PHON);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
 
   // BLE
   bleSetup();
